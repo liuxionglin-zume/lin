@@ -40,6 +40,14 @@
             background: linear-gradient(135deg, #4a6fa5 0%, #5c82b9 100%);
         }
 
+        .header .welcome-text {
+            color: #fff;
+            font-size: 22px;
+            margin-top: 18px;
+            letter-spacing: 2px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+        }
+
         .header img {
             width: 200px;
             height: auto;
@@ -140,6 +148,129 @@
         .b1 img:hover {
             transform: scale(1.08);
             box-shadow: 0 4px 14px rgba(74, 111, 165, 0.18);
+        }
+
+        /* 留言板块容器 */
+        .msg-box {
+            width: 92%;
+            max-width: 900px;
+            margin: 0 auto 50px;
+            padding: 35px 30px;
+            background: linear-gradient(140deg, #f3f7fb 0%, #eef4fc 100%);
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(74, 111, 165, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .msg-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .msg-title::after {
+            content: "";
+            width: 50px;
+            height: 2px;
+            background: #4a6fa5;
+            display: block;
+            margin: 10px auto 0;
+        }
+
+        /* 输入框样式 */
+        .msg-input-area {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        #msgName {
+            flex: 1;
+            min-width: 160px;
+            padding: 12px 16px;
+            border: 1px solid #d0dceb;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        #msgContent {
+            flex: 3;
+            min-width: 260px;
+            padding: 12px 16px;
+            border: 1px solid #d0dceb;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        #msgName:focus,
+        #msgContent:focus {
+            border-color: #4a6fa5;
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.15);
+        }
+
+        #submitMsg {
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #4a6fa5 0%, #5c82b9 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #submitMsg:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* 留言列表 */
+        .msg-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .msg-item {
+            padding: 16px 20px;
+            background: #fff;
+            border-radius: 12px;
+            border-left: 4px solid #4a6fa5;
+        }
+
+        .msg-name-time {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .msg-name {
+            font-weight: 600;
+            color: #4a6fa5;
+        }
+
+        .msg-time {
+            color: #888;
+        }
+
+        .msg-text {
+            color: #333;
+            font-size: 15px;
+        }
+
+        .empty-tip {
+            text-align: center;
+            color: #888;
+            padding: 20px 0;
         }
 
         /* 底部版权栏 */
@@ -278,6 +409,10 @@
                 width: 160px;
             }
 
+            .header .welcome-text {
+                font-size: 18px;
+            }
+
             .b2 {
                 padding: 30px;
                 font-size: 16px;
@@ -299,6 +434,14 @@
                 width: 80%;
                 max-width: 280px;
             }
+
+            .msg-input-area {
+                flex-direction: column;
+            }
+
+            .msg-box {
+                padding: 25px 18px;
+            }
         }
     </style>
 </head>
@@ -307,6 +450,7 @@
     <div class="header">
         <img src="https://ts2.tc.mm.bing.net/th/id/OIP-C.RuzpGnaN8BX2kx_ZqGmBrQHaHa?cb=thfc1falcon4&rs=1&pid=ImgDetMain&o=7&rm=3"
             alt="liu大大">
+        <p class="welcome-text">欢迎光临我的网站</p>
     </div>
 
     <div class="content-wrap">
@@ -341,6 +485,17 @@
             <p>QQ</p>
             <img class="qr" src="IMG_3940.JPG" alt="QQ二维码">
         </div>
+    </div>
+
+    <!-- 留言板区域 -->
+    <div class="msg-box">
+        <p class="msg-title">留言板</p>
+        <div class="msg-input-area">
+            <input type="text" id="msgName" placeholder="你的昵称">
+            <input type="text" id="msgContent" placeholder="写下你的留言...">
+            <button id="submitMsg">提交留言</button>
+        </div>
+        <div class="msg-list" id="msgList"></div>
     </div>
 
     <div class="b2">
@@ -401,6 +556,65 @@
         })
         mask.addEventListener('click', () => {
             mask.classList.remove('show');
+        })
+
+        // ========== 留言板功能（本地存储，刷新不丢失） ==========
+        const msgList = document.getElementById('msgList');
+        const msgName = document.getElementById('msgName');
+        const msgContent = document.getElementById('msgContent');
+        const submitMsg = document.getElementById('submitMsg');
+
+        // 读取本地留言数组
+        function getMsgData() {
+            let data = localStorage.getItem('pageMsgList');
+            return data ? JSON.parse(data) : [];
+        }
+        // 渲染留言列表
+        function renderMsg() {
+            let arr = getMsgData();
+            msgList.innerHTML = "";
+            if (arr.length === 0) {
+                msgList.innerHTML = '<div class="empty-tip">暂无留言，快来第一条吧！</div>';
+                return;
+            }
+            // 倒序，最新留言在最上面
+            arr.reverse().forEach(item => {
+                let div = document.createElement('div');
+                div.className = "msg-item";
+                div.innerHTML = `
+                <div class="msg-name-time">
+                    <span class="msg-name">${item.name}</span>
+                    <span class="msg-time">${item.time}</span>
+                </div>
+                <div class="msg-text">${item.text}</div>
+            `;
+                msgList.appendChild(div);
+            })
+        }
+        // 初始化渲染
+        renderMsg();
+        // 提交留言
+        submitMsg.addEventListener('click', () => {
+            let name = msgName.value.trim();
+            let text = msgContent.value.trim();
+            if (!name || !text) {
+                alert("昵称和留言内容不能为空！");
+                return;
+            }
+            // 获取当前时间
+            let now = new Date();
+            let timeStr = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}`;
+            let arr = getMsgData();
+            arr.push({
+                name: name,
+                text: text,
+                time: timeStr
+            });
+            localStorage.setItem('pageMsgList', JSON.stringify(arr));
+            // 清空输入框
+            msgName.value = "";
+            msgContent.value = "";
+            renderMsg();
         })
     </script>
 </body>
