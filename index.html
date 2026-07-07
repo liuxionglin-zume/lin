@@ -15,7 +15,6 @@
 
         html {
             scroll-behavior: smooth;
-            /* 平滑滚动 */
         }
 
         html,
@@ -23,24 +22,21 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            /* 页面浅渐变底色，高级不单调 */
-            background: linear-gradient(160deg, #fcfdff 0%, #f6f9ff 100%);
+            background: linear-gradient(160deg, #fcfdff 0%, #f6f7ff 100%);
             opacity: 0;
             animation: pageFadeIn 0.8s ease forwards;
         }
 
-        /* 页面载入淡入动画 */
         @keyframes pageFadeIn {
             to {
                 opacity: 1;
             }
         }
 
-        /* 头部渐变背景 + 居中优化 */
+        /* 头部区域 */
         .header {
             text-align: center;
             padding: 45px 20px;
-            /* 蓝调渐变，比纯色高级 */
             background: linear-gradient(135deg, #4a6fa5 0%, #5c82b9 100%);
         }
 
@@ -51,17 +47,16 @@
             border-radius: 12px;
             transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            /* 头像细微边框提亮 */
             border: 2px solid rgba(255, 255, 255, 0.25);
         }
 
         .header img:hover {
             transform: scale(1.06);
-            box-shadow: 0 6px 22px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
             border-color: rgba(255, 255, 255, 0.5);
         }
 
-        /* 内容外层容器 */
+        /* 卡片外层容器 */
         .content-wrap {
             display: flex;
             justify-content: center;
@@ -71,11 +66,10 @@
             flex-wrap: wrap;
         }
 
-        /* 卡片渐变底色、高级阴影 */
+        /* 卡片通用样式 */
         .b1 {
             text-align: center;
             padding: 42px 28px;
-            /* 卡片浅蓝渐变，告别死灰单色 */
             background: linear-gradient(140deg, #f3f7fb 0%, #eef4fc 100%);
             line-height: 1.8;
             max-height: 700px;
@@ -84,7 +78,6 @@
             border-radius: 16px;
             box-shadow: 0 2px 10px rgba(74, 111, 165, 0.07);
             transition: all 0.35s ease;
-            /* 细微内发光 */
             border: 1px solid rgba(255, 255, 255, 0.6);
         }
 
@@ -94,16 +87,14 @@
             background: linear-gradient(140deg, #eef4fc 0%, #e6effa 100%);
         }
 
-        /* 标题美化 + 分割线装饰 */
         .b1>p:first-child {
             font-size: 19px;
             font-weight: 600;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             color: #2c3e50;
             position: relative;
         }
 
-        /* 标题下方短装饰线 */
         .b1>p:first-child::after {
             content: "";
             width: 40px;
@@ -114,18 +105,28 @@
             border-radius: 1px;
         }
 
-        .b1 p {
+        .b1 p:not(:first-child) {
             font-size: 15px;
             color: #445566;
-            margin: 7px 0;
-            transition: color 0.25s;
+            margin: 6px 0;
+            transition: all 0.3s ease;
+            transform: translateY(8px);
+            opacity: 0.6;
         }
 
-        .b1:hover p {
+        .b1:hover p:not(:first-child) {
+            transform: translateY(0);
+            opacity: 1;
             color: #2d4059;
         }
 
-        /* 二维码美化 */
+        .b1.love p:not(:first-child):hover {
+            color: #4a6fa5;
+            font-weight: 500;
+            transform: scale(1.05);
+        }
+
+        /* 二维码图片 */
         .b1 img {
             width: 150px;
             height: auto;
@@ -133,6 +134,7 @@
             border-radius: 10px;
             transition: transform 0.3s ease, box-shadow 0.3s;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
         }
 
         .b1 img:hover {
@@ -140,7 +142,7 @@
             box-shadow: 0 4px 14px rgba(74, 111, 165, 0.18);
         }
 
-        /* 底部渐变版权栏 + 文字微光 */
+        /* 底部版权栏 */
         .b2 {
             font-size: 18px;
             text-align: center;
@@ -151,7 +153,109 @@
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
         }
 
-        /* 手机端适配：卡片竖排 */
+        /* 返回顶部按钮 */
+        #backTop {
+            position: fixed;
+            bottom: 50px;
+            right: 40px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #4a6fa5;
+            color: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        #backTop.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #backTop:hover {
+            transform: translateY(-5px);
+            background: #5c82b9;
+        }
+
+        /* 点赞按钮 */
+        #likeBtn {
+            position: fixed;
+            bottom: 110px;
+            right: 40px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #5c82b9;
+            color: #fff;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #likeBtn:hover {
+            transform: translateY(-5px) scale(1.05);
+            background: #4a6fa5;
+        }
+
+        #likeBtn:active {
+            transform: scale(0.95);
+        }
+
+        .like-num {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #ff5252;
+            color: #fff;
+            font-size: 12px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 二维码弹窗遮罩 */
+        .mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .mask.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mask img {
+            width: 320px;
+            border-radius: 12px;
+        }
+
+        /* 移动端适配 */
         @media (max-width: 1100px) {
             .content-wrap {
                 flex-direction: column;
@@ -162,7 +266,7 @@
 
             .b1 {
                 width: 92%;
-                max-width: 420px;
+                max-width: 400px;
                 padding: 35px 22px;
             }
 
@@ -177,6 +281,23 @@
             .b2 {
                 padding: 30px;
                 font-size: 16px;
+            }
+
+            #backTop,
+            #likeBtn {
+                right: 20px;
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+
+            #likeBtn {
+                bottom: 90px;
+            }
+
+            .mask img {
+                width: 80%;
+                max-width: 280px;
             }
         }
     </style>
@@ -200,7 +321,7 @@
         </div>
 
         <!-- 爱好 -->
-        <div class="b1">
+        <div class="b1 love">
             <p>爱好</p>
             <p>money</p>
             <p>RMB</p>
@@ -212,19 +333,76 @@
         <!-- 微信二维码 -->
         <div class="b1">
             <p>微信</p>
-            <img src="微信图片_20260707120250_29_3.jpg" alt="微信二维码">
+            <img class="qr" src="微信图片_20260707120250_29_3.jpg" alt="微信二维码">
         </div>
 
         <!-- QQ二维码 -->
         <div class="b1">
             <p>QQ</p>
-            <img src="IMG_3940.JPG" alt="QQ二维码">
+            <img class="qr" src="IMG_3940.JPG" alt="QQ二维码">
         </div>
     </div>
 
     <div class="b2">
         <p>&copy; 2026 zume-liuxionglin 版权所有</p>
     </div>
+
+    <!-- 返回顶部按钮 -->
+    <button id="backTop">↑</button>
+
+    <!-- 点赞按钮 -->
+    <button id="likeBtn">
+        ❤
+        <span class="like-num" id="likeCount">0</span>
+    </button>
+
+    <!-- 二维码弹窗 -->
+    <div class="mask" id="mask"></div>
+
+    <script>
+        // 返回顶部
+        const backTop = document.getElementById('backTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 150) {
+                backTop.classList.add('show');
+            } else {
+                backTop.classList.remove('show');
+            }
+        })
+        backTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        })
+
+        // 点赞本地存储
+        const likeBtn = document.getElementById('likeBtn');
+        const likeCount = document.getElementById('likeCount');
+        let like = localStorage.getItem('pageLike') || 0;
+        likeCount.innerText = like;
+        likeBtn.addEventListener('click', () => {
+            like++;
+            localStorage.setItem('pageLike', like);
+            likeCount.innerText = like;
+            likeBtn.style.transform = "scale(0.85)";
+            setTimeout(() => {
+                likeBtn.style.transform = "";
+            }, 150)
+        })
+
+        // 二维码弹窗放大
+        const mask = document.getElementById('mask');
+        const bigQrImg = document.createElement('img');
+        mask.appendChild(bigQrImg);
+        const qrList = document.querySelectorAll('.qr');
+        qrList.forEach(item => {
+            item.addEventListener('click', () => {
+                bigQrImg.src = item.src;
+                mask.classList.add('show');
+            })
+        })
+        mask.addEventListener('click', () => {
+            mask.classList.remove('show');
+        })
+    </script>
 </body>
 
 </html>
